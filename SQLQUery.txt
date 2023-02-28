@@ -1,0 +1,334 @@
+> Customer Tables
+CREATE TABLE Customer (
+    ID INT   PRIMARY KEY,
+    First_Name Varchar(20)  NOT NULL ,
+    Last_Name Varchar(20)  NOT NULL ,
+    Gender varchar(10)  ,
+    Address Varchar(100)  NOT NULL ,
+    City varchar(20) ,
+    Mobile_No INT  NOT NULL ,
+    Email varchar(20) default 'abc@gmail.com' 
+);
+
+#Change COl Name
+Alter Table Customer change Moible_No Mobile_No INT;
+desc Customer;
+
+
+INSERT INTO Customer (Id, First_Name, Last_Name,Gender,Address, City, Mobile_No ,Email) VALUES
+(1001, 'John', 'Done', 'Male','12, Juhu Road, Maharashtra - 400049','Mumbai',2525896329, 'John@gmail.com'),
+(1002, 'Mary','Smith', 'Female','789, Hill Road,Bandra West, Maharashtra 400050','Mumbai',8965259865, 'Mary@gmail.com'),
+(1003, 'James', 'Brown', 'Male','1011, Linking Road, Kalwa West, Maharashtra 400052','Thane',2897859325,'James@gmail.com'),
+(1004, 'Linda', 'Jonas', 'Female','2223, LBS Road, Mulund West, Maharashtra 400080','Mumbai',7319854625, 'Jonas@gmail.com'),
+(1005, 'Hina', 'Sharma', 'Female','2021, Pedder Road, Malabar Hill, Maharashtra 400026','Thane',2824658355, 'hinas@gmail.com'),
+(1006, 'Karan', 'Kapoor', 'Male','123, Carter Road, Bandra West, Maharashtra 400050','Mumbai',7898928985,'Karankk@gmail.com');
+
+#change DataType
+Alter Table Customer modify Mobile_No Varchar(10);
+desc customer;
+
+# Drop COl;
+Alter Table Customer drop Mobile_no;
+desc Customer;
+
+#Add COL
+ Alter Table Customer add Mobile_NO varchar(11) NOT NULL after City;
+desc Customer;
+
+
+Update Customer set Mobile_NO='2525896329' where ID=1001;
+Update Customer set Mobile_NO='8965259865' where ID=1002;
+Update Customer set Mobile_NO='2897859325' where ID=1003;
+Update Customer set Mobile_NO='7319854625' where ID=1004;
+Update Customer set Mobile_NO='2824658355' where ID=1005;
+Update Customer set Mobile_NO='7898928985' where ID=1006;
+
+select * From Customer;
+
+MariaDB [store]> select * from customer;
++------+------------+-----------+--------+-----------------------------------------------------+--------+------------+-------------------+
+| ID   | First_Name | Last_Name | Gender | Address                                             | City   | Mobile_NO  | Email             |
++------+------------+-----------+--------+-----------------------------------------------------+--------+------------+-------------------+
+| 1001 | John       | Done      | Male   | 12, Juhu Road, Maharashtra - 400049                 | Mumbai | 2525896329 | John@gmail.com    |
+| 1002 | Mary       | Smith     | Female | 789, Hill Road,Bandra West, Maharashtra 400050      | Mumbai | 8965259865 | Mary@gmail.com    |
+| 1003 | James      | Brown     | Male   | 1011, Linking Road, Kalwa West, Maharashtra 400052  | Thane  | 2897859325 | James@gmail.com   |
+| 1004 | Linda      | Jonas     | Female | 2223, LBS Road, Mulund West, Maharashtra 400080     | Mumbai | 7319854625 | Jonas@gmail.com   |
+| 1005 | Hina       | Sharma    | Female | 2021, Pedder Road, Malabar Hill, Maharashtra 400026 | Thane  | 2824658355 | hinas@gmail.com   |
+| 1006 | Karan      | Kapoor    | Male   | 123, Carter Road, Bandra West, Maharashtra 400050   | Mumbai | 7898928985 | Karankk@gmail.com |
++------+------------+-----------+--------+-----------------------------------------------------+--------+------------+-------------------+
+
+
+select Gender, count(*) from Customer Group BY Gender;
+=====================================================================================================================================
+#### Order Table 
+CREATE TABLE OrderData (
+    OrderID int PRIMARY KEY Auto_increment ,
+    CustomerID int  ,
+    ProductID int  ,
+    O_Date Date DEFAULT Curdate() ,
+    Quantity int  ,
+    TotalAmount int  NOT NULL ,
+    Paid char(3)  default 'NO',
+    Mode varchar(10)  NOT NULL ,
+    FOREIGN KEY(CustomerID) REFERENCES  Customer(ID) ON Delete Cascade,
+    FOREIGN KEY(ProductID) REFERENCES  Product(ID) ON Delete Cascade
+);
+
+## Change Table Name
+Alter Table OrderData RENAME to Order_Tbl;
+desc Order_Tbl;
+
+##INSERT VALUES:::
+
+INSERT INTO Order_Tbl
+(CustomerID,ProductID,O_Date,Quantity,TotalAmount,Paid,Mode)
+VALUES(1001,101,'2022-12-24',1,30200,'YES','Online');
+INSERT INTO Order_Tbl(CustomerID,ProductID,O_Date,Quantity,TotalAmount,Paid,Mode )VALUES(1001,202,'2022-12-24',1,80200,'YES','Online');
+INSERT INTO Order_Tbl(CustomerID,ProductID,O_Date,Quantity,TotalAmount,Paid,Mode )VALUES(1002,102,'2023-01-02',1,59200,'YES','Online');
+INSERT INTO Order_Tbl(CustomerID,ProductID,O_Date,Quantity,TotalAmount,Paid,Mode )VALUES(1003,301,'2023-01-15',1,25400,'YES','Online');
+INSERT INTO Order_Tbl(CustomerID,ProductID,O_Date,Quantity,TotalAmount,Paid,Mode)VALUES(1004,201,'2023-02-01',1,27000,'YES','COD');
+INSERT INTO Order_Tbl(CustomerID,ProductID,Quantity,TotalAmount,Paid,Mode )VALUES(1005,203,2,38200,'NO','COD');
+INSERT INTO Order_Tbl(CustomerID,ProductID,Quantity,TotalAmount,Paid,Mode)VALUES(1006,104,1,20000,'NO','COD');
+
+
+MariaDB [store]> select * from order_Tbl;
++---------+------------+-----------+------------+----------+-------------+------+--------+
+| OrderID | CustomerID | ProductID | O_Date     | Quantity | TotalAmount | Paid | Mode   |
++---------+------------+-----------+------------+----------+-------------+------+--------+
+|       1 |       1001 |       101 | 2022-12-24 |        1 |       30200 | YES  | Online |
+|       2 |       1001 |       202 | 2022-12-24 |        1 |       80200 | YES  | Online |
+|       3 |       1002 |       102 | 2023-01-02 |        1 |       59200 | YES  | Online |
+|       4 |       1003 |       301 | 2023-01-15 |        1 |       25400 | YES  | Online |
+|       5 |       1004 |       201 | 2023-02-01 |        1 |       27000 | NO   | COD    |
+|       6 |       1005 |       203 | 2023-02-24 |        2 |       38200 | NO   | COD    |
+|       7 |       1006 |       104 | 2023-02-24 |        1 |       20000 | NO   | COD    |
++---------+------------+-----------+------------+----------+-------------+------+--------+
+
+
+ 
+
+ 
+
+
+
+
+
+
+====================================================================================================================================
+
+
+CREATE TABLE Category (
+    ID Int PRIMARY KEY Auto_increment ,
+    Catg_Name Varchar(20) UNIQUE );
+[store]> select * from category;
++----+--------------+
+| ID | Catg_Name    |
++----+--------------+
+|  3 | Refrigerator |
+|  2 | Smart_Phones |
+|  1 | TV           |
++----+--------------+
+
+INSERT INTO Category (Catg_Name) VALUES ('TV'),('Smart_Phones'),('Refrigerator');
+select * from Category;
+===================================================================================================================================
+
+
+CREATE TABLE Product (
+    ID int  PRIMARY KEY ,
+    Catg_ID Int  NOT NULL ,
+    Product_Name Varchar(50) ,
+    Product_Deatils Varchar(100),
+    Price DECIMAL(10,2),
+    FOREIGN KEY(Catg_ID) REFERENCES  Category(ID) ON DELETE CASCADE
+);
+
+Alter Table Product change Product_Deatils Product_Details Varchar(100);
+
+INSERT INTO Product (ID,Catg_ID,Product_Name,Product_Details,Price) 
+VALUES
+(101,1,'Samsung Crystal 4K ','108 cm (43 inch) Ultra HD(4K)LED Smart Tizen TV',30000);
+
+INSERT INTO Product (ID,Catg_ID,Product_Name,Product_Details,Price) VALUES(102,1,'OnePlus U1S','164 cm  (65 inch) Ultra HD (4K) LED SmartTV with Far field and Dolby Audio ',59000);
+INSERT INTO Product (ID,Catg_ID,Product_Name,Product_Details,Price) VALUES(103,1,'Mi X Series','138 cm (55 inch) Ultra HD (4K) LED Smart Android TV with Dolby Vision & 30W Dolby Audio ',37999);
+INSERT INTO Product (ID,Catg_ID,Product_Name,Product_Details,Price) VALUES(104,1,'OnePlus Y1','100 cm (40 inch) Full HD LED Smart Android TV with Dolby Audio',18999);
+INSERT INTO Product (ID,Catg_ID,Product_Name,Product_Details,Price) VALUES(201,2,'POCO X5 Pro','8 GB RAM | 256 GB ,6.67 inch,Full HD+,Qualcomm Snapdagon 778G',25000);
+INSERT INTO Product (ID,Catg_ID,Product_Name,Product_Details,Price) VALUES(202,2,'SAMSUNG Galaxy S23 5G','8 GB RAM | 256 GB, 6.1 inch, Full HD+, Qualmm Snapdragon 8 Gen 2 Processor',79999);
+INSERT INTO Product (ID,Catg_ID,Product_Name,Product_Details,Price) VALUES(203,2,'OnePlus Nord CE 2 Lite 5G','6 GB RAM | 128 GB ROM,(6.59 inch) Display,Qualcomm Snapdagon 695',19000);
+INSERT INTO Product (ID,Catg_ID,Product_Name,Product_Details,Price) VALUES(204,2,'OnePLus 10T','6 GB RAM | 128 GB ROM,(6.62 inch) Full HD+ AMOLED Display,Qualcomm Snapdagon 870',30000);
+INSERT INTO Product (ID,Catg_ID,Product_Name,Product_Details,Price) VALUES(301,3,'SAMSUNG 253 L','Frost Free Double Door 3 Star Refrigerator,Digital Inverter:For Energy savings up to 35%',24990);
+INSERT INTO Product (ID,Catg_ID,Product_Name,Product_Details,Price) VALUES(302,3,'SAMSUNG 189 L','Direct Cool Single Door 5 Star Refrigerator with Base Drawer with Digital Inverter',18000);
+
+ [store]> select * from Product;
++-----+---------+---------------------------+------------------------------------------------------------------------------------------+----------+
+| ID  | Catg_ID | Product_Name              | Product_Details                                                                          | Price    |
++-----+---------+---------------------------+------------------------------------------------------------------------------------------+----------+
+| 101 |       1 | Samsung Crystal 4K        | 108 cm (43 inch) Ultra HD(4K)LED Smart Tizen TV                                          | 30000.00 |
+| 102 |       1 | OnePlus U1S               | 164 cm  (65 inch) Ultra HD (4K) LED SmartTV with Far field and Dolby Audio               | 59000.00 |
+| 103 |       1 | Mi X Series               | 138 cm (55 inch) Ultra HD (4K) LED Smart Android TV with Dolby Vision & 30W Dolby Audio  | 37999.00 |
+| 104 |       1 | OnePlus Y1                | 100 cm (40 inch) Full HD LED Smart Android TV with Dolby Audio                           | 18999.00 |
+| 201 |       2 | POCO X5 Pro               | 8 GB RAM | 256 GB ,6.67 inch,Full HD+,Qualcomm Snapdagon 778G                            | 25000.00 |
+| 202 |       2 | SAMSUNG Galaxy S23 5G     | 8 GB RAM | 256 GB, 6.1 inch, Full HD+, Qualmm Snapdragon 8 Gen 2 Processor               | 79999.00 |
+| 203 |       2 | OnePlus Nord CE 2 Lite 5G | 6 GB RAM | 128 GB ROM,(6.59 inch) Display,Qualcomm Snapdagon 695                         | 19000.00 |
+| 204 |       2 | OnePLus 10T               | 6 GB RAM | 128 GB ROM,(6.62 inch) Full HD+ AMOLED Display,Qualcomm Snapdagon 870         | 30000.00 |
+| 301 |       3 | SAMSUNG 253 L             | Frost Free Double Door 3 Star Refrigerator,Digital Inverter:For Energy savings up to 35% | 24990.00 |
+| 302 |       3 | SAMSUNG 189 L             | Direct Cool Single Door 5 Star Refrigerator with Base Drawer with Digital Inverter       | 18000.00 |
++-----+---------+---------------------------+------------------------------------------------------------------------------------------+----------+
+===================================================================================================================================
+
+
+CREATE TABLE Supplier (
+    Id Varchar(10) PRIMARY KEY,
+    Name Varchar(20)  NOT NULL ,
+    Sup_Address Varchar(100)  NOT NULL ,
+    Contact Varchar(20) NOT NULL ,
+    Unit_supplied int  NOT NULL ,
+    Per_Unit_Cost decimal(10,2) ,
+    S_Date DATE ,
+    Lead_time Varchar(20)
+);
+
+INSERT INTO Supplier(ID,Name,Sup_Address,Contact,Unit_Supplied,Per_Unit_Cost,S_Date,Lead_Time) 
+VALUES 
+('SAM-1C','SAMSUMG_TV Pvt.Ltd.','123, Carter Road, Bandra West, Mumbai, Maharashtra 400050','998579632',15,25000,'2022-10-11','05 Days');
+INSERT INTO Supplier(ID,Name,Sup_Address,Contact,Unit_Supplied,Per_Unit_Cost,S_Date,Lead_Time) VALUES ('OPL-1U','OnePlus_TV','456, SV Road, Andheri West, Mumbai,Maharashtra 400058','9687851298',10,40000,'2022-10-15','10 Days');
+INSERT INTO Supplier(ID,Name,Sup_Address,Contact,Unit_Supplied,Per_Unit_Cost,S_Date,Lead_Time) VALUES ('REDMI-1X','REDMI_TV','1213, MG Road, Goregaon West, Mumbai, Maharashtra 400062','3569874526',20,30000,'2022-10-25','10 Days');
+INSERT INTO Supplier(ID,Name,Sup_Address,Contact,Unit_Supplied,Per_Unit_Cost,S_Date,Lead_Time) VALUES ('REDMI-2PX','REDMI_SM','1214, MG Road, Goregaon West, Mumbai, Maharashtra 400062','65478521569',20,20000,'2022-10-20','15 Days');
+INSERT INTO Supplier(ID,Name,Sup_Address,Contact,Unit_Supplied,Per_Unit_Cost,S_Date,Lead_Time) VALUES ('SAM-2S23','SAMSUMG_SM Pvt.Ltd.','124, Carter Road, Bandra West, Mumbai, Maharashtra 400050','78569845326',10,60000,'2022-12-15','20 Days');
+INSERT INTO Supplier(ID,Name,Sup_Address,Contact,Unit_Supplied,Per_Unit_Cost,S_Date,Lead_Time) VALUES ('SAM-3-253L','SAMSUMG_REF Pvt.Ltd.','125, Carter Road, Bandra West, Mumbai, Maharashtra 400050','54785147859',10,35000,'2022-09-05','10 Days');
+
+ [store]> select * from Supplier;
++------------+----------------------+-----------------------------------------------------------+-------------+---------------+---------------+------------+-----------+
+| Id         | Name                 | Sup_Address                                               | Contact     | Unit_supplied | Per_Unit_Cost | S_Date     | Lead_time |
++------------+----------------------+-----------------------------------------------------------+-------------+---------------+---------------+------------+-----------+
+| OPL-1U     | OnePlus_TV           | 456, SV Road, Andheri West, Mumbai,Maharashtra 400058     | 9687851298  |            10 |      40000.00 | 2022-10-15 | 10 Days   |
+| REDMI-1X   | REDMI_TV             | 1213, MG Road, Goregaon West, Mumbai, Maharashtra 400062  | 3569874526  |            20 |      30000.00 | 2022-10-25 | 10 Days   |
+| REDMI-2PX  | REDMI_SM             | 1214, MG Road, Goregaon West, Mumbai, Maharashtra 400062  | 65478521569 |            20 |      15000.00 | 2022-10-20 | 15 Days   |
+| SAM-1C     | SAMSUMG_TV Pvt.Ltd.  | 123, Carter Road, Bandra West, Mumbai, Maharashtra 400050 | 998579632   |            15 |      25000.00 | 2022-10-11 | 05 Days   |
+| SAM-2S23   | SAMSUMG_SM Pvt.Ltd.  | 124, Carter Road, Bandra West, Mumbai, Maharashtra 400050 | 78569845326 |            10 |      60000.00 | 2022-12-15 | 20 Days   |
+| SAM-3-253L | SAMSUMG_REF Pvt.Ltd. | 125, Carter Road, Bandra West, Mumbai, Maharashtra 400050 | 54785147859 |            10 |      20000.00 | 2022-09-05 | 10 Days   |
++------------+----------------------+-----------------------------------------------------------+-------------+---------------+---------------+------------+-----------+
+====================================================================================================================================
+
+CREATE TABLE Stock (
+    Id VarChar(10) PRIMARY KEY,
+    Product_ID Int ,
+    Supplier_ID VarChar(10),
+    Stock_Qty_Left int  NOT NULL,
+    FOREIGN KEY(Product_ID) REFERENCES  Product(ID),
+    FOREIGN KEY(Supplier_ID) REFERENCES  Supplier(ID) 
+);
+
+
+
+INSERT INTO Stock (Id,Product_ID,Supplier_ID,Stock_Qty_Left) 
+VALUES('S101',101,'SAM-1C',10);
+INSERT INTO Stock (Id,Product_ID,Supplier_ID,Stock_Qty_Left) VALUES('S102',102,'OPL-1U',5);
+INSERT INTO Stock (Id,Product_ID,Supplier_ID,Stock_Qty_Left) VALUES('S103',103,'REDMI-1X',9);
+INSERT INTO Stock (Id,Product_ID,Supplier_ID,Stock_Qty_Left) VALUES('S104',104,'OPL-1Y',10);
+INSERT INTO Stock (Id,Product_ID,Supplier_ID,Stock_Qty_Left) VALUES('S201',201,'REDMI-2PX',15);
+INSERT INTO Stock (Id,Product_ID,Supplier_ID,Stock_Qty_Left) VALUES('S202',202,'SAM-2S23',10);
+INSERT INTO Stock (Id,Product_ID,Supplier_ID,Stock_Qty_Left) VALUES('S203',203,'OPL-2NC2',15);
+INSERT INTO Stock (Id,Product_ID,Supplier_ID,Stock_Qty_Left) VALUES('S301',301,'SAM-3-253L',5);
+
+[Store]>select * from Stock;
++------+------------+-------------+----------------+
+| Id   | Product_ID | Supplier_ID | Stock_Qty_Left |
++------+------------+-------------+----------------+
+| S101 |        101 | SAM-1C      |             10 |
+| S102 |        102 | OPL-1U      |              5 |
+| S103 |        103 | REDMI-1X    |              9 |
+| S201 |        201 | REDMI-2PX   |             15 |
+| S202 |        202 | SAM-2S23    |             10 |
+| S301 |        301 | SAM-3-253L  |              5 |
++------+------------+-------------+----------------+
+=====================================================================================================================================
+CREATE TABLE Delivery (
+    ID Varchar(10) PRIMARY KEY ,
+    order_ID int  ,
+    Cust_ID int  ,
+    D_Date Date  DEFAULT  DATE_ADD(CURDATE(), INTERVAL 15 DAY),
+    D_Charges INT ,
+    D_Status Varchar(20)  NOT NULL ,
+    FOREIGN KEY(order_ID) REFERENCES  Order_Tbl(orderID) ON DELETE Cascade,
+    FOREIGN KEY(Cust_ID) REFERENCES  Customer(ID) ON DELETE Cascade
+);
+
+INSERT INTO Delivery(ID,Order_ID,Cust_ID,D_Date,D_Charges,D_Status)
+values('D-1',1,1001,'2022-12-25',200,'Delivered');
+INSERT INTO Delivery(ID,Order_ID,Cust_ID,D_Date,D_Charges,D_Status) values('D-2',2,1001,'2023-12-25',100,'Delivered');
+INSERT INTO Delivery(ID,Order_ID,Cust_ID,D_Date,D_Charges,D_Status) values('D-3',3,1002,'2023-01-04',200,'Delivered');
+INSERT INTO Delivery(ID,Order_ID,Cust_ID,D_Date,D_Charges,D_Status) values('D-4',4,1003,'2023-01-18',500,'Delivered');
+INSERT INTO Delivery(ID,Order_ID,Cust_ID,D_Date,D_Charges,D_Status) values('D-5',5,1004,'2023-02-05',200,'Delivered');
+INSERT INTO Delivery(ID,Order_ID,Cust_ID,D_Charges,D_Status) values('D-6',6,1005,200,'NULL');
+INSERT INTO Delivery(ID,Order_ID,Cust_ID,D_Charges,D_Status) values('D-7',7,1006,100,'NULL');
+
+
+[store]> select * from delivery;
++-----+----------+---------+------------+-----------+-----------+
+| ID  | order_ID | Cust_ID | D_Date     | D_Charges | D_Status  |
++-----+----------+---------+------------+-----------+-----------+
+| D-1 |        1 |    1001 | 2022-12-25 |       200 | Delivered |
+| D-2 |        2 |    1001 | 2023-12-25 |       100 | Delivered |
+| D-3 |        3 |    1002 | 2023-01-04 |       200 | Delivered |
+| D-4 |        4 |    1003 | 2023-01-18 |       500 | Delivered |
+| D-5 |        5 |    1004 | 2023-02-05 |       200 | Delivered |
+| D-6 |        6 |    1005 | 2023-03-11 |       200 | NULL      |
+| D-7 |        7 |    1006 | 2023-03-11 |       100 | NULL      |
++-----+----------+---------+------------+-----------+-----------+
+
+=====================================================================================================================================
+
+##Query
+1)Oredr BY
+
+select Product_Name , Price from Product order By Price;
+
+2) Group By with inner join
+
+Select Catg_Name, Count(Catg_ID) as Quantity from Product
+inner join Category 
+on product.Catg_ID = Category.ID group by Catg_ID;
+
+
+3)Select Catg_Name, Count(Catg_ID) as Quantity from Product
+inner join Category 
+on product.Catg_ID = Category.ID group by Catg_ID 
+Having Count(Catg_ID)=4;
+
+4) Group BY
+select Concat(First_name,' ',Last_Name), Count(CustomerID) Total_Order, City,Email  
+from Customer 
+Inner Join Order_Tbl 
+on Customer.ID = Order_Tbl.CustomerID
+Group by ID;
+
+
+5)select orderID ,Concat(First_Name,' ',Last_Name), O_Date,Product_name,catg_name,totalAmount 
+from order_Tbl o 
+join customer c on o.customerid =c.id 
+join product p on o.productid =p.id  
+join Category c1 on p.Catg_ID = c1.ID;
+
+
+6)select ID, Product_Name,Price from product 
+where Product_Name 
+in ('Samsung Crystal 4K','SAMSUNG Galaxy S23 5G','SAMSUNG 253 L','SAMSUNG 189 L');
+
+
+7)Union
+select product_name from product
+union
+select name from supplier;
+
+8) View
+
+Create View VwCust as select ID, First_Name, Gender,City from customer;
+show tables;
+insert into vwcust values(1007,'Puja','Female','Navi-Mumbai');
+select *  from Vwcust;
+update vwcust set First_name='Pooja' where ID=1007;
+Delete from Vwcust where id=1007;
+drop view vwcust;
+
+
